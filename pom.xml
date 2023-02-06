@@ -37,6 +37,7 @@
                     <forkMode>once</forkMode>
                     <runOrder>alphabetical</runOrder>
                     <failIfNoSpecifiedTests>true</failIfNoSpecifiedTests>
+                    <argLine>--patch-module java.base=/tmp/build</argLine>
                 </configuration>
             </plugin>
         </plugins>
