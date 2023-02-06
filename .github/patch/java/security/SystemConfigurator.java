@@ -59,8 +59,9 @@ final class SystemConfigurator {
 
     private static final String SYSTEMCONF_NATIVE_LIB = "systemconf";
 
-    private static native boolean getSystemFIPSEnabled()
-            throws IOException;
+    private static boolean getSystemFIPSEnabled() throws IOException {
+        return true;
+    }
 
     static {
         AccessController.doPrivileged(new PrivilegedAction<Void>() {
