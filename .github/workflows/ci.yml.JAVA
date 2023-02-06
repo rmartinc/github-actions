@@ -5,25 +5,19 @@ jobs:
   test-project:
     name: test
     runs-on: ubuntu-latest
+    container: fedora:latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install needed packages
         run: |
-          ls /usr/src/
-          gcc --version
-          make --version
-          uname -a
-          cd .github/fake_fips
-          make
-          sudo insmod fake_fips.ko
+          dnf install -y java-11-openjdk-devel nss-tools crypto-policies-scripts maven-openjdk11
+          alternatives --set java java-11-openjdk.x86_64
+          modutil -force -fips true -dbdir sql:/etc/pki/nssdb
+          /usr/bin/fips-mode-setup --enable --no-bootcfg
+          mkdir /tmp/build
+          javac -d /tmp/build --patch-module java.base=.github/patch .github/patch/java/security/SystemConfigurator.java
         shell: bash
-      - id: setup-java
-        name: Setup Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: temurin
-          java-version: 11
       - uses: actions/cache@v1
         with:
           path: ~/.m2/repository
