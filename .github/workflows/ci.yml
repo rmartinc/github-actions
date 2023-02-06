@@ -10,7 +10,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install needed packages
-        run: dnf install -y java-11-openjdk-devel nss-tools crypto-policies-scripts maven-openjdk11
+        run: |
+          dnf install -y java-11-openjdk-devel nss-tools crypto-policies-scripts maven-openjdk11
+          modutil -force -fips true -dbdir sql:/etc/pki/nssdb
+          /usr/bin/fips-mode-setup --enable --no-bootcfg
+        shell: bash
       - uses: actions/cache@v1
         with:
           path: ~/.m2/repository
