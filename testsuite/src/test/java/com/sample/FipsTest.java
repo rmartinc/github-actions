@@ -1,5 +1,6 @@
 package com.sample;
 
+import com.sample.base.BaseBean;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -26,6 +27,11 @@ public class FipsTest {
     public void showSystemProps() {
         System.getProperties().entrySet().stream()
                 .forEach(e -> System.out.println(e.getKey() + "=" + e.getValue()));
+    }
+    
+    @Test
+    public void accesBase() {
+        Assert.assertEquals("lala", new BaseBean("lala").getMessage());
     }
 
     @Test
