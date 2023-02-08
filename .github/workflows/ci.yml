@@ -5,6 +5,10 @@ jobs:
   test-project:
     name: test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        mode: [non-strict, strict]
+      fail-fast: false
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -62,7 +66,11 @@ jobs:
             dnf install -y java-17-openjdk-devel crypto-policies-scripts
             fips-mode-setup --enable --no-bootcfg
             if fips-mode-setup --is-enabled; then
-              JAVA_HOME=/etc/alternatives/java_sdk_17 ./mvnw test -B -fae -pl testsuite
+              if [ "${{ matrix.mode }}" = "strict" ]; then
+                JAVA_HOME=/etc/alternatives/java_sdk_17 ./mvnw -Dstrict-mode test -B -fae -pl testsuite
+              else
+                JAVA_HOME=/etc/alternatives/java_sdk_17 ./mvnw -Dnonstrict-mode test -B -fae -pl testsuite
+              fi
             else
               exit 1
             fi
