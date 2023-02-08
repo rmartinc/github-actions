@@ -44,10 +44,11 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .mvn/wrapper/maven-wrapper.jar
-          key: ${{ runner.os }}-maven-wrapper-${{ hashFiles('**/maven-wrapper.properties') }}
-          # use a previously cached JAR file as something else besides the version could have changed in the file
+          key: ${{ runner.os }}-maven-wrapper-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
-            ${{ runner.os }}-maven-wrapper-
+            build-${{ runner.os }}-maven-
+      - name: Compile
+        run: mvn install -DskipTests
       - name: Build
         uses: docker://fedora:latest
         with:
