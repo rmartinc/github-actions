@@ -52,4 +52,7 @@ jobs:
       - name: Build
         uses: docker://fedora:latest
         with:
-          entrypoint: .github/scripts/run-fedora.sh
+          build-args: >-
+            -v /home/runner/.m2/repository:/repository
+          args: >-
+            .github/scripts/run-fedora.sh
