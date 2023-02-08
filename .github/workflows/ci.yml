@@ -51,7 +51,4 @@ jobs:
         run: |
           ./mvnw install -DskipTests
       - name: Build
-        uses: docker://registry.access.redhat.com/ubi8/ubi:latest
-        with:
-          options: -v /home/runner/.m2:/root/.m2
-          entrypoint: .github/scripts/run-fedora.sh
+        run: docker run --workdir /github/workspace -v "${{ github.workspace }}":"/github/workspace" -v /home/runner/.m2:/root/.m2 registry.access.redhat.com/ubi8/ubi:latest .github/scripts/run-fedora.sh
