@@ -49,7 +49,7 @@ jobs:
             build-${{ runner.os }}-maven-
       - name: Compile
         run: |
-          mvn install -DskipTests
+          ./mvnw install -DskipTests
       - name: Build
         uses: addnab/docker-run-action@v3
         with:
@@ -59,10 +59,10 @@ jobs:
             -v /home/runner/work/github-actions/github-actions:/home/runner/work/github-actions/github-actions
           run: |
             cd /home/runner/work/github-actions/github-actions
-            dnf install -y java-17-openjdk-devel nss-tools crypto-policies-scripts maven
+            dnf install -y java-17-openjdk-devel crypto-policies-scripts
             fips-mode-setup --enable --no-bootcfg
             if fips-mode-setup --is-enabled; then
-              JAVA_HOME=/etc/alternatives/java_sdk_17 mvn test -B -fae -pl testsuite
+              JAVA_HOME=/etc/alternatives/java_sdk_17 ./mvnw test -B -fae -pl testsuite
             else
               exit 1
             fi
