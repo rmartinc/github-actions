@@ -48,11 +48,21 @@ jobs:
           restore-keys: |
             build-${{ runner.os }}-maven-
       - name: Compile
-        run: mvn install -DskipTests
+        run: |
+          mvn install -DskipTests
       - name: Build
-        uses: docker://fedora:latest
+        uses: addnab/docker-run-action@v3
         with:
-          build-args: >-
-            -v /home/runner/.m2/repository:/repository
-          args: >-
-            .github/scripts/run-fedora.sh
+          image: registry.access.redhat.com/ubi8/ubi:latest
+          options: >-
+            -v /home/runner/.m2:/root/.m2
+            -v /home/runner/work/github-actions/github-actions:/home/runner/work/github-actions/github-actions
+          run: |
+            cd /home/runner/work/github-actions/github-actions
+            dnf install -y java-17-openjdk-devel nss-tools crypto-policies-scripts maven
+            fips-mode-setup --enable --no-bootcfg
+            if fips-mode-setup --is-enabled; then
+              JAVA_HOME=/etc/alternatives/java_sdk_17 mvn test -B -fae -pl testsuite
+            else
+              exit 1
+            fi
