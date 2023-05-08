@@ -5,15 +5,11 @@ jobs:
   test-project:
     name: test
     runs-on: ubuntu-latest
+    container:
+      image: freeipa/freeipa-server:fedora-rawhide
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Fake fips
-        run: |
-          cd .github/fake_fips
-          make
-          sudo insmod fake_fips.ko
-        shell: bash
       - id: setup-java
         name: Setup Java
         uses: actions/setup-java@v3
@@ -50,5 +46,50 @@ jobs:
       - name: Compile
         run: |
           ./mvnw install -DskipTests
-      - name: Build
-        run: docker run --workdir /github/workspace -v "${{ github.workspace }}":"/github/workspace" -v "$HOME/.m2":"/root/.m2" registry.access.redhat.com/ubi8/ubi:latest .github/scripts/run-fedora.sh
+      - name: Tests
+        run: |
+          id -a
+          pwd
+
+          if ! grep -q ^ldap_user_extra_attrs /etc/sssd/sssd.conf; then
+            sed -i '/ldap_tls_cacert/a ldap_user_extra_attrs = mail:mail, sn:sn, givenname:givenname, telephoneNumber:telephoneNumber' /etc/sssd/sssd.conf
+          fi
+          if ! grep -q ^user_attributes /etc/sssd/sssd.conf; then
+            sed -i '/allowed_uids/a user_attributes = +mail, +telephoneNumber, +givenname, +sn' /etc/sssd/sssd.conf
+          fi
+
+          systemctl restart sssd
+          sss_cache -E
+
+          echo "auth    required   pam_sss.so" >>/etc/pam.d/keycloak
+          echo "account required   pam_sss.so" >>/etc/pam.d/keycloak
+
+          printf "%b" "password\n" | kinit admin
+          ipa group-add --desc='test group' testgroup
+          ipa user-add emily --first=Emily --last=Jones --email=emily@jones.com --random
+          ipa group-add-member testgroup --users=emily
+          ipa user-add bart --first=bart --last=bart --email= --random
+          ipa user-add david --first=david --last=david --random
+          kdestroy
+
+          ldapmodify -D "cn=Directory Manager" -w password <<EOF
+          dn: uid=emily,cn=users,cn=accounts,dc=example,dc=test
+          changetype: modify
+          replace: userpassword
+          userpassword: emili123
+
+          dn: uid=bart,cn=users,cn=accounts,dc=example,dc=test
+          changetype: modify
+          replace: userpassword
+          userpassword: bart123
+
+          dn: uid=david,cn=users,cn=accounts,dc=example,dc=test
+          changetype: modify
+          replace: userpassword
+          userpassword: david123
+
+          EOF
+
+          printf "%b" "password\n" | kinit admin
+          ipa user-disable david
+          kdestroy
