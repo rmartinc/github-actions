@@ -49,8 +49,7 @@ jobs:
           id -a
           pwd
           cat /etc/hosts
-          ps -ef
-          ls /var/log/
+          rm /var/log/ipa*
 
           ipa-server-install --unattended --realm=EXAMPLE.TEST --ds-password=password --admin-password=password --idstart=60000
 
@@ -96,3 +95,5 @@ jobs:
           printf "%b" "password\n" | kinit admin
           ipa user-disable david
           kdestroy
+
+          ./mvnw clean install
