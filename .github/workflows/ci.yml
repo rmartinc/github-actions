@@ -7,6 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: freeipa/freeipa-server:fedora-rawhide
+      options: --hostname ipa.example.test
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -47,7 +48,9 @@ jobs:
         run: |
           id -a
           pwd
-          systemctl status ipa-server-upgrade.service
+          cat /etc/hosts
+
+          ipa-server-install --unattended --realm=EXAMPLE.TEST --ds-password=password --admin-password=password --idstart=60000
 
           if ! grep -q ^ldap_user_extra_attrs /etc/sssd/sssd.conf; then
             sed -i '/ldap_tls_cacert/a ldap_user_extra_attrs = mail:mail, sn:sn, givenname:givenname, telephoneNumber:telephoneNumber' /etc/sssd/sssd.conf
