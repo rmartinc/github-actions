@@ -1,7 +1,8 @@
 #!/bin/bash
 
 set -o pipefail
-echo $JAVA_HOME
+
+dnf install -y java-17-openjdk-devel
 
 if ! grep -q ^ldap_user_extra_attrs /etc/sssd/sssd.conf; then
   sed -i '/ldap_tls_cacert/a ldap_user_extra_attrs = mail:mail, sn:sn, givenname:givenname, telephoneNumber:telephoneNumber' /etc/sssd/sssd.conf
