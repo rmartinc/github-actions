@@ -43,13 +43,11 @@ jobs:
           key: ${{ runner.os }}-maven-wrapper-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             build-${{ runner.os }}-maven-
-      - name: Compile
-        run: |
-          ./mvnw install -DskipTests
       - name: Tests
         run: |
           id -a
           pwd
+          systemctl status ipa-server-upgrade.service
 
           if ! grep -q ^ldap_user_extra_attrs /etc/sssd/sssd.conf; then
             sed -i '/ldap_tls_cacert/a ldap_user_extra_attrs = mail:mail, sn:sn, givenname:givenname, telephoneNumber:telephoneNumber' /etc/sssd/sssd.conf
