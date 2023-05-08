@@ -17,7 +17,7 @@ while [[ "$line" != "FreeIPA server configured." ]]; do
   fi
 done
 
-$DOCKER exec -e "JAVA_HOME" $container .github/scripts/run-ipa-tests.sh
+$DOCKER exec $container .github/scripts/run-ipa-tests.sh
 result=$?
 
 $DOCKER stop $container
