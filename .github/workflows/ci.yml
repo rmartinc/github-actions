@@ -49,6 +49,8 @@ jobs:
           id -a
           pwd
           cat /etc/hosts
+          ps -ef
+          ls /var/log/
 
           ipa-server-install --unattended --realm=EXAMPLE.TEST --ds-password=password --admin-password=password --idstart=60000
 
