@@ -42,5 +42,5 @@ jobs:
           restore-keys: |
             build-${{ runner.os }}-maven-
       - name: Run tests
-        run: docker run --hostname ipa.example.test --sysctl net.ipv6.conf.all.disable_ipv6=0 --rm --workdir /github/workspace -v "${{ github.workspace }}":"/github/workspace" -v "$HOME/.m2":"/root/.m2" freeipa/freeipa-server:fedora-rawhide .github/scripts/run-ipa.sh
+        run: docker run --hostname ipa.example.test --sysctl net.ipv6.conf.all.disable_ipv6=0 --rm --workdir /github/workspace -v "${{ github.workspace }}":"/github/workspace" -v "$HOME/.m2":"/root/.m2" freeipa/freeipa-server:fedora-rawhide .github/scripts/run-fedora.sh
 
