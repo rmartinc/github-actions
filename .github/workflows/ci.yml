@@ -42,5 +42,4 @@ jobs:
           restore-keys: |
             build-${{ runner.os }}-maven-
       - name: Run tests
-        run: |
-          echo $JAVA_HOME
+        run: .github/scripts/run-ipa.sh "${{ github.workspace }}" 
