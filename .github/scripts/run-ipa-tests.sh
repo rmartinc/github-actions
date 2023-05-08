@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -o pipefail
+echo $JAVA_HOME
+
 if ! grep -q ^ldap_user_extra_attrs /etc/sssd/sssd.conf; then
   sed -i '/ldap_tls_cacert/a ldap_user_extra_attrs = mail:mail, sn:sn, givenname:givenname, telephoneNumber:telephoneNumber' /etc/sssd/sssd.conf
 fi
@@ -10,7 +13,7 @@ fi
 systemctl restart sssd
 sss_cache -E
 
-echo "auth    required   pam_sss.so" >>/etc/pam.d/keycloak
+echo "auth    required   pam_sss.so" >/etc/pam.d/keycloak
 echo "account required   pam_sss.so" >>/etc/pam.d/keycloak
 
 printf "%b" "password\n" | kinit admin
