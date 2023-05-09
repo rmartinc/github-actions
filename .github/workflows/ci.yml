@@ -41,5 +41,11 @@ jobs:
           key: ${{ runner.os }}-maven-wrapper-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             build-${{ runner.os }}-maven-
+      - id: cache-ipa-data
+        name: Cache IPA data
+        uses: actions/cache@v3
+        with:
+          path: ~/data
+          key: ${{ steps.weekly-cache-key.outputs.key }}
       - name: Run tests
         run: .github/scripts/run-ipa.sh "${{ github.workspace }}" 
