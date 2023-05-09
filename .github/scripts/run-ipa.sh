@@ -8,11 +8,11 @@ container=$($DOCKER run --detach --rm -h ipa.example.test --sysctl net.ipv6.conf
 
 # loop until the ipa server is started
 sleep 30
-line=$($DOCKER logs ipa-server | tail -1)
+line=$($DOCKER logs $container | tail -1)
 regexp="FreeIPA server configured.|FreeIPA server started."
 while ! [[ "$line" =~ $regexp ]]; do
   sleep 30
-  line=$($DOCKER logs ipa-server | tail -1)
+  line=$($DOCKER logs $container | tail -1)
   if [ $? -ne 0 ]; then
     exit 1
   fi
@@ -22,9 +22,9 @@ new_install="false"
 if [[ $line == "FreeIPA server configured." ]]; then
   new_install="true"
 fi
-$DOCKER exec ipa-server .github/scripts/run-ipa-tests.sh $new_install
+$DOCKER exec $container .github/scripts/run-ipa-tests.sh $new_install
 result=$?
 
-$DOCKER stop ipa-server
+$DOCKER stop $container
 
 exit $result
