@@ -44,11 +44,7 @@ jobs:
       - name: Run tests
         run: |
           set -x
-          sudo sed -i -e '/^::1\s*localhost/d' /etc/hosts
-          cat /etc/hosts
-          ping -c 5 localhost
-          ping -c 5 127.0.0.1
-          which firefox
-          ls -la $(which firefox)
-          ls -la /usr/local/share/gecko_driver/geckodriver
+          LALA="lala;lala"
+          echo "${LALA@Q}"
+          /bin/sh --version
           exit 0
