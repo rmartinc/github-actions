@@ -14,9 +14,7 @@ jobs:
 
   java:
     name: CodeQL Java
-    needs: conditional
     runs-on: ubuntu-latest
-    if: needs.conditional.outputs.java == 'true'
     outputs:
       conclusion: ${{ steps.check.outputs.conclusion }}
 
