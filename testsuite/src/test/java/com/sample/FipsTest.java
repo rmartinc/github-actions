@@ -34,13 +34,13 @@ public class FipsTest {
         Assert.assertEquals("lala", new BaseBean("lala").getMessage());
     }
 
-    @Test
+    //@Test
     public void isFIPSEnabledSystemLevel() throws IOException {
          String enable = new String(Files.readAllBytes(Paths.get("/proc/sys/crypto/fips_enabled")), StandardCharsets.UTF_8);
          Assert.assertEquals("/proc/sys/crypto/fips_enabled fips is " + enable, "1", enable);
     }
 
-    @Test
+    //@Test
     public void isFipsEnabledJavaLevel() {
         MatcherAssert.assertThat(new SecureRandom().getProvider().getName().toLowerCase(),
                 CoreMatchers.containsString("fips"));

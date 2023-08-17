@@ -1,0 +1,40 @@
+name: CodeQL
+
+on:
+  push:
+    branches-ignore:
+      - main
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+
+  java:
+    name: CodeQL Java
+    needs: conditional
+    runs-on: ubuntu-latest
+    if: needs.conditional.outputs.java == 'true'
+    outputs:
+      conclusion: ${{ steps.check.outputs.conclusion }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2.21.2
+        with:
+          languages: java
+
+      - name: Build Keycloak
+        uses: |
+          ./mvnw clean install
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2.21.2
+        with:
+          wait-for-processing: true
+        env:
+          CODEQL_ACTION_EXTRA_OPTIONS: '{"database":{"interpret-results":["--max-paths",0]}}'
