@@ -29,8 +29,6 @@ jobs:
         if: steps.cache-maven-repository.outputs.cache-hit == 'true'
         shell: bash
         run: |
-          ping 127.0.0.1
-          ping localhost
           if ( stat ~/.m2/repository/org/keycloak &>/dev/null ); then
             echo "Found org/keycloak artifacts in Maven repository cache"
             ls ~/.m2/repository/org/keycloak
@@ -47,4 +45,6 @@ jobs:
         shell: sh
         run: |
           set -x
+          ping 127.0.0.1
+          ping localhost
           ./mvnw clean install
