@@ -45,4 +45,5 @@ jobs:
         shell: sh
         run: |
           set -x
+          cat /etc/hosts
           ./mvnw clean install
