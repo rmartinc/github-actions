@@ -21,6 +21,7 @@ jobs:
           mkdir -p ../../../.m2/repository
           cmd /c mklink /d $HOME\.m2\repository D:\.m2\repository
       - name: Run tests
+        shell: bash
         run: |
           set -x
           mkdir -p ~/.m2/repository/com/github/eirslett
