@@ -19,6 +19,6 @@ jobs:
         run: |
           set -x
           mkdir -p ../../../.m2/repository
-          cmd /c mklink /d $HOME\.m2\repository D:\.m2\repository
+          cmd /c mklink /d $HOME/.m2/repository /d:/.m2/repository
           mkdir -p ~/.m2/repository/com/github/eirslett
           ./mvnw clean install
