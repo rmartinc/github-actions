@@ -19,7 +19,7 @@ jobs:
           set -x
           id -a
           sudo bash -c 'cat << EOF > /etc/docker/daemon.json
-          { "userns-remap": "default" }
+          { "userns-remap": "runner" }
           EOF'
           sudo systemctl restart docker
           sudo cat /etc/docker/daemon.json
