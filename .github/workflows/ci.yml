@@ -27,5 +27,5 @@ jobs:
           cat /etc/subgid
           mkdir "$HOME/ipa-data"
           podman --version
-          podman run -h ipa.example.test --sysctl net.ipv6.conf.all.disable_ipv6=0 --workdir /github/workspace -v "$HOME/ipa-data":"/data" -v "${{ github.workspace }}":"/github/workspace" -v "$HOME/.m2":"/root/.m2" freeipa/freeipa-server:rocky-9 ipa-server-install --unattended --realm=EXAMPLE.TEST --ds-password=password --admin-password=password --idstart=60000 --no-ntp
+          podman run -h ipa.example.test --sysctl net.ipv6.conf.all.disable_ipv6=0 freeipa/freeipa-server:rocky-9 ipa-server-install --unattended --realm=EXAMPLE.TEST -p lala1234 -a lala1234 --idstart=60000 --no-ntp
 
