@@ -4,7 +4,7 @@ on:
 jobs:
   test-project:
     name: test
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -14,15 +14,16 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-      - shell: powershell
-        name: Link the cached Maven repository to the OS-dependent location
-        if: runner.os == 'Windows'
-        run: |
-          mkdir -p ../../../.m2/repository
-          cmd /c mklink /d $HOME\.m2\repository D:\.m2\repository
-      - name: Run tests
-        shell: bash
+      - name: docker
         run: |
           set -x
-          mkdir -p ~/.m2/repository/com/github/eirslett
-          ./mvnw clean install
+          id -a
+          sudo bash -c 'cat << EOF > /etc/docker/daemon.json
+{ "userns-remap": "default" }
+EOF'
+          sudo systemctl restart docker
+          sudo cat /etc/docker/daemon.json
+          cat /etc/subuid
+          cat /etc/subgid
+          docker run -h ipa.example.test --sysctl net.ipv6.conf.all.disable_ipv6=0 freeipa/freeipa-server:rocky-9 ipa-server-install --unattended --realm=EXAMPLE.TEST --ds-password=password --admin-password=password --idstart=60000 --no-ntp
+
