@@ -21,7 +21,6 @@ jobs:
           sudo bash -c 'cat << EOF > /etc/docker/daemon.json
           { "userns-remap": "default" }
           EOF'
-          mkdir $HOME/.m2
           sudo systemctl restart docker
           sudo cat /etc/docker/daemon.json
           cat /etc/subuid
