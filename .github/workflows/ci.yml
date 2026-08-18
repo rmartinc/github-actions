@@ -18,13 +18,14 @@ jobs:
         run: |
           set -x
           id -a
-          sudo bash -c 'cat << EOF > /etc/docker/daemon.json
-          { "userns-remap": "runner" }
-          EOF'
-          sudo systemctl restart docker
-          sudo cat /etc/docker/daemon.json
+          #sudo bash -c 'cat << EOF > /etc/docker/daemon.json
+          #{ "userns-remap": "runner" }
+          #EOF'
+          #sudo systemctl restart docker
+          #sudo cat /etc/docker/daemon.json
           cat /etc/subuid
           cat /etc/subgid
           mkdir "$HOME/ipa-data"
-          docker run -h ipa.example.test --sysctl net.ipv6.conf.all.disable_ipv6=0 --workdir /github/workspace -v "$HOME/ipa-data":"/data" -v "${{ github.workspace }}":"/github/workspace" -v "$HOME/.m2":"/root/.m2" freeipa/freeipa-server:rocky-9 ipa-server-install --unattended --realm=EXAMPLE.TEST --ds-password=password --admin-password=password --idstart=60000 --no-ntp
+          podman --version
+          podman run -h ipa.example.test --sysctl net.ipv6.conf.all.disable_ipv6=0 --workdir /github/workspace -v "$HOME/ipa-data":"/data" -v "${{ github.workspace }}":"/github/workspace" -v "$HOME/.m2":"/root/.m2" freeipa/freeipa-server:rocky-9 ipa-server-install --unattended --realm=EXAMPLE.TEST --ds-password=password --admin-password=password --idstart=60000 --no-ntp
 
