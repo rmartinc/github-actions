@@ -19,8 +19,8 @@ jobs:
           set -x
           id -a
           sudo bash -c 'cat << EOF > /etc/docker/daemon.json
-{ "userns-remap": "default" }
-EOF'
+          { "userns-remap": "default" }
+          EOF'
           sudo systemctl restart docker
           sudo cat /etc/docker/daemon.json
           cat /etc/subuid
